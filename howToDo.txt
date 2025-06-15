@@ -1,0 +1,24 @@
+1. Install Dependencies, dengan requirements.txt
+ pip install -r requirements.txt
+
+2. setup .env untuk integrasi DB dan Environment lainya
+3. run main.py
+
+Struktur Folder
+
+Utils       -> untuk membuat fungsi yang bisa di pakai berkali-kali
+Routes      -> untuk menentukan endpoint api
+Resource    -> untuk menyimpan file file yang di butuhkan
+Log         -> untuk melihat lalu lintas program dan monitoring kelanjutan (belum jadi)
+App         -> sebagai logic utama framework
+Database    -> configurasi database PostgreSQL 
+Models      -> logic untuk menyimpan struktur table database
+
+App/<file.py>   -> untuk membuat program restful apinya
+App/__init__.py -> global file configurasi
+
+saat akun sudah banyak gunakan skema berikut :
+
+- extraks cookies satu satu akun per sosmed
+- kolom sameSite harus di hapus pada cookies json
+- setelah sudah buat api scheduling 2 hari sekali untuk driver.get_cookies() dan masukan ke db
