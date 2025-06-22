@@ -6,19 +6,28 @@ from sqlalchemy.orm import relationship, Mapped
 from uuid import UUID
 
 if TYPE_CHECKING:
-    from app.Models.user import User
+    from app.Models.note_emotions import NoteEmotion 
+    from app.Models.user import User 
 
-class Note(SQLModel, table=True):
-    __tablename__ = "Notes"
+class NotesBase(SQLModel):
+    title: str = Field(max_length=200)
+    content: str
+    created_at: datetime = Field(default_factory=datetime.now)
+    updated_at: datetime = Field(default_factory=datetime.now)
 
-    uuid: UUID = Field(primary_key=True, index=True)
-    id_user: str = Field(unique=True)
-
-    createdAt: Optional[datetime] = Field(default_factory=datetime.now(timezone.utc))
-    updatedAt: Optional[datetime] = Field(default_factory=datetime.now(timezone.utc))
-
-    # Relationships
+class Notes(NotesBase, table=True):
+    __tablename__ = "notes"
+    
+    id_notes: Optional[int] = Field(default=None, primary_key=True)
+    id_user: UUID = Field(foreign_key="users.uid")
+    title: str = Field(max_length=200)
+    content: str
+    created_at: datetime = Field(default_factory=datetime.now)
+    updated_at: datetime = Field(default_factory=datetime.now)
+    
+    # Relations
     user: Optional["User"] = Relationship(back_populates="notes_list")
+    note_emotions: Optional[List["NoteEmotion"]] = Relationship(back_populates="note")
 
     def to_dict(self):
         result = {}
@@ -28,8 +37,8 @@ class Note(SQLModel, table=True):
             result[col.name] = getattr(self, col.name)
 
         try:
-            if self.notes_list:
-                result["notes"] = [note.to_dict() for note in self.notes_list]
+            if self.note_emotions:
+                result["notes_emotions"] = [result.to_dict() for result in self.note_emotions]
         except Exception as e:
             print(e)
             pass

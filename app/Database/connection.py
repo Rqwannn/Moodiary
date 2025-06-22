@@ -2,7 +2,10 @@ import os
 from typing import AsyncGenerator
 
 from sqlmodel import text, SQLModel
+
 from sqlmodel.ext.asyncio.session import AsyncSession
+from sqlalchemy.ext.asyncio import async_sessionmaker
+
 from sqlalchemy.orm import sessionmaker
 from contextlib import asynccontextmanager
 
@@ -15,7 +18,10 @@ async_session = sessionmaker(
 async def init_db():
     async with async_engine.begin() as conn:
         from app.Models.user import User
-        from app.Models.notes import Note
+        from app.Models.notes import Notes
+        from app.Models.note_emotions import NoteEmotion
+        from app.Models.emotions import Emotion
+        from app.Models.recomendastions import Recommendation
 
         await conn.run_sync(SQLModel.metadata.create_all)
 
@@ -53,9 +59,7 @@ def execute_insert(query: str, params: tuple = ()) -> int:
 @asynccontextmanager
 async def get_session() -> AsyncGenerator[AsyncSession, None]:
     """Dependency to provide the session object"""
-    async_session = sessionmaker(
-        async_engine, expire_on_commit=False, class_=AsyncSession
-    )
+    async_session = async_sessionmaker(async_engine, class_=AsyncSession, expire_on_commit=False)
     
     async with async_session() as session:
         try:

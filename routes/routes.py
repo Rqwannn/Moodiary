@@ -1,3 +1,4 @@
 from controller.auth import Authentication
+from controller.notes import NotesController
 
-routes = [Authentication]
+routes = [Authentication, NotesController]

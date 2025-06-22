@@ -5,7 +5,7 @@ from datetime import datetime
 from typing import Optional, TYPE_CHECKING, List
 
 if TYPE_CHECKING:
-    from app.Models.notes import Note
+    from app.Models.notes import Notes
 
 class UserBase(SQLModel):
     email: str = Field(unique=True, index=True, max_length=255)
@@ -34,10 +34,27 @@ class User(UserBase, table=True):
     created_at: datetime = Field(sa_column=Column(pg.TIMESTAMP, default=datetime.now))
     updated_at: datetime = Field(sa_column=Column(pg.TIMESTAMP, default=datetime.now))
 
-    notes_list: List["Note"] = Relationship(back_populates="user")
+    notes_list: List["Notes"] = Relationship(back_populates="user", sa_relationship_kwargs={"cascade": "all, delete-orphan"})
 
     def __repr__(self) -> str:
         return f"User => {self.email}"
+    
+    def to_dict(self):
+        result = {}
+
+        for col in self.__table__.columns:
+            if col.name in ['createdAt', 'updatedAt']:
+                continue
+            result[col.name] = getattr(self, col.name)
+
+        try:
+            if self.notes_list:
+                result["notes"] = [result.to_dict() for result in self.notes_list]
+        except Exception as e:
+            print(e)
+            pass
+
+        return result
 
 class UserCreate(SQLModel):
     email: str = Field(max_length=255)
