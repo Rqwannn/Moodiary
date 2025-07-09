@@ -23,7 +23,7 @@ class User(UserBase, table=True):
     email: str = Field(unique=True, index=True, max_length=255)
     password: str = Field(max_length=255)
     nama: str = Field(default=None, max_length=50)
-    tipe_keperibadian: str = Field(unique=True, index=True, max_length=20)
+    tipe_keperibadian: str = Field(max_length=20)
     
     is_active: bool = Field(default=True)
     is_verified: bool = Field(default=False)
