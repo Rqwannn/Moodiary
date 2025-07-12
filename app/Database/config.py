@@ -5,7 +5,7 @@ from sqlalchemy.ext.asyncio import create_async_engine
 load_dotenv()
 
 class Config:
-    SQLALCHEMY_DATABASE_URI = f"postgresql+asyncpg://postgres:admin@localhost:5432/moodiary" # Local Database
+    SQLALCHEMY_DATABASE_URI = f"postgresql+asyncpg://postgres:admin@localhost:5433/moodiary" # Local Database
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     SECRET_KEY: str = os.getenv("SECRET_KEY", "your-secret-key-here-change-this")
