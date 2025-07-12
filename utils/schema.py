@@ -17,3 +17,7 @@ class UpdateUserData(BaseModel):
 
 class RefreshTokenRequest(BaseModel):
     refresh_token: str
+
+class InferenceModelInput(BaseModel):
+    text: str = None
+    history_notes: Optional[List[str]] = None
